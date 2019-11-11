@@ -37,15 +37,15 @@ class DependencyFinder
 
         file.readlines.each do |line|
             worksheet.write(row, 0, line)
-            worksheet.write(row, 1, apex_search(line))
+            worksheet.write(row, 1, dependency_search(line, '/Users/daniel.m/Projects/Polaris/**/*.cls'))
             row += 1    
         end
     end
 
-    def apex_search(field)
+    def dependency_search(field, dependency_type)
         dependencies = []
 
-        Dir.glob('/Users/daniel.m/Projects/Polaris/**/*.cls') do |file|
+        Dir.glob(dependency_type) do |file|
             File.readlines(file).each do |line|
                 dependencies << file if line.include?(field)
             end
