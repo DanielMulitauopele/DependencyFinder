@@ -5,7 +5,7 @@ require 'pry'
 class DependencyFinder
     def write_to_excel(file)
         f = File.new(file, chomp: true)
-        workbook = WriteXLSX.new('Field_Dependencies.xlsx')
+        workbook = WriteXLSX.new('Opportunity_Field_Dependencies.xlsx')
         worksheet = workbook.add_worksheet
         
         write_headers(workbook, worksheet)
@@ -26,9 +26,10 @@ class DependencyFinder
         header_format = workbook.add_format(font)
 
         worksheet.write(0, 0, 'API Name', header_format)    
-        worksheet.write(0, 1, 'Apex Dependencies', header_format)  
-        worksheet.write(0, 2, 'Config Dependencies', header_format)  
+        worksheet.write(0, 1, 'Apex Class Dependencies', header_format)  
+        worksheet.write(0, 2, 'Field Dependencies', header_format)  
         worksheet.write(0, 3, 'Layout Dependencies', header_format)  
+        worksheet.write(0, 4, 'Trigger Dependencies', header_format)  
     end
 
     def write_lines(file, worksheet)
@@ -38,6 +39,11 @@ class DependencyFinder
         file.readlines.each do |line|
             worksheet.write(row, 0, line)
             worksheet.write(row, 1, dependency_search(line, '/Users/daniel.m/Projects/Polaris/**/*.cls'))
+            worksheet.write(row, 2, dependency_search(line, '/Users/daniel.m/Projects/Polaris/**/**.field-meta.xml'))
+            worksheet.write(row, 3, dependency_search(line, '/Users/daniel.m/Projects/Polaris/**/**.layout-meta.xml'))
+            worksheet.write(row, 4, dependency_search(line, '/Users/daniel.m/Projects/Polaris/**/**.Trigger'))
+
+            puts row
             row += 1    
         end
     end
@@ -47,7 +53,7 @@ class DependencyFinder
 
         Dir.glob(dependency_type) do |file|
             File.readlines(file).each do |line|
-                dependencies << file if line.include?(field)
+                dependencies << file if line.include?(field.chomp)
             end
         end
 
