@@ -35,61 +35,34 @@ class DependencyFinder
         workbook = WriteXLSX.new('Opportunity_Field_Dependencies.xlsx')
         worksheet = workbook.add_worksheet
         
-        write_headers(workbook, worksheet, inputs)
-        write_lines(f, worksheet, inputs)
+        # write_headers(workbook, worksheet, inputs)
+        write_lines(f, workbook, worksheet, inputs)
 
         workbook.close
         sleep 2
         puts 'Excel file created!'
     end
 
-    def write_headers(workbook, worksheet, inputs)
+    def write_lines(file, workbook, worksheet, inputs)
         header_format = workbook.add_format(@font)
+        inputs.each_with_index do |value, index|
+            worksheet.write(0, index, @commands[value][:header], header_format) 
+        end 
 
-        worksheet.write(0, 0, @commands[0][:header], header_format)
-
-        worksheet.write(0, 1, @commands[1][:header], header_format)  
-        worksheet.write(0, 2, @commands[2][:header], header_format)  
-        worksheet.write(0, 3, @commands[3][:header], header_format)  
-        worksheet.write(0, 4, @commands[4][:header], header_format)  
-        worksheet.write(0, 5, @commands[5][:header], header_format)  
-        worksheet.write(0, 6, @commands[6][:header], header_format)  
-        worksheet.write(0, 7, @commands[7][:header], header_format)  
-        worksheet.write(0, 8, @commands[8][:header], header_format)  
-        worksheet.write(0, 9, @commands[9][:header], header_format)  
-        worksheet.write(0, 10, @commands[10][:header], header_format)  
-        worksheet.write(0, 11, @commands[11][:header], header_format)  
-        worksheet.write(0, 12, @commands[12][:header], header_format)  
-        worksheet.write(0, 13, @commands[13][:header], header_format)  
-        worksheet.write(0, 14, @commands[14][:header], header_format)  
-    end
-
-    def write_lines(file, worksheet, inputs)
         row = 1
-        col = 0
-
         file.readlines.each do |line|
-            worksheet.write(row, 0, line)
-
-            worksheet.write(row, 1, dependency_search(line, @commands[1][:file_type]))
-            worksheet.write(row, 2, dependency_search(line, @commands[2][:file_type]))
-            worksheet.write(row, 3, dependency_search(line, @commands[3][:file_type]))
-            worksheet.write(row, 4, dependency_search(line, @commands[4][:file_type]))
-            worksheet.write(row, 5, dependency_search(line, @commands[5][:file_type]))
-            worksheet.write(row, 6, dependency_search(line, @commands[6][:file_type]))
-            worksheet.write(row, 7, dependency_search(line, @commands[7][:file_type]))
-            worksheet.write(row, 8, dependency_search(line, @commands[8][:file_type]))
-            worksheet.write(row, 9, dependency_search(line, @commands[9][:file_type]))
-            worksheet.write(row, 10, dependency_search(line, @commands[10][:file_type]))
-            worksheet.write(row, 11, dependency_search(line, @commands[11][:file_type]))
-            worksheet.write(row, 12, dependency_search(line, @commands[12][:file_type]))
-            worksheet.write(row, 13, dependency_search(line, @commands[13][:file_type]))
-            worksheet.write(row, 14, dependency_search(line, @commands[14][:file_type]))
+            inputs.each_with_index do |value, index|
+                if index == 0
+                    worksheet.write(row, index, line)
+                else
+                    worksheet.write(row, index, dependency_search(line, @commands[value][:file_type]))
+                end 
+            end
 
             output = row.to_s + ' fields reviewed...' + "\r"
             print output
             $stdout.flush
-            row += 1    
+            row += 1
         end
     end
 
