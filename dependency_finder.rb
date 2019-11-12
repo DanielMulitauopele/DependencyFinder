@@ -30,12 +30,34 @@ class DependencyFinder
         }
     end
 
+    def run
+        puts "Welcome to the DependencyFinder tool, created by Daniel Mulitauopele (11/11/19)." 
+        puts "This tool is designed to track salesforce dependencies across different file types by running a search across your org source files." 
+        puts "Please ensure that your source code is up to date before running the search."
+        STDIN.getc
+
+        puts "See below for the list of commands and their corresponding file types." 
+        puts "In the event of missing file types, feel free to submit a pull request to the repository at: https://github.com/DanielMulitauopele/DependencyFinder." 
+        puts "Once you know which file types you'd like to search, enter them below." 
+        puts "If you'd like more than one dependency type, enter them separated by commas. Unseparated values may return faulty data. The commands are as follows:"
+        STDIN.getc
+
+        comm_count = @commands.keys.count - 1
+        (1..comm_count).each do |key|
+            puts "For #{@commands[key][:header]}, enter #{key}"
+        end
+
+        inputs = gets.chomp 
+        formatted_inputs = inputs.split(',').map { |s| s.to_i }
+
+        write_to_excel("opportunity_field_names.txt", formatted_inputs.unshift(0))
+    end
+
     def write_to_excel(file, inputs)
         f = File.new(file, chomp: true)
         workbook = WriteXLSX.new('Opportunity_Field_Dependencies.xlsx')
         worksheet = workbook.add_worksheet
         
-        # write_headers(workbook, worksheet, inputs)
         write_lines(f, workbook, worksheet, inputs)
 
         workbook.close
