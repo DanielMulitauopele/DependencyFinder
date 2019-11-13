@@ -75,7 +75,7 @@ class DependencyFinder
         file.readlines.each do |line|
             inputs.each_with_index do |value, index|
                 if index == 0
-                    worksheet.write(row, index, line)
+                    worksheet.write(row, index, line.chomp)
                 else
                     worksheet.write(row, index, dependency_search(line, @commands[value][:file_type]))
                 end 
