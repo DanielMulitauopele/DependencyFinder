@@ -93,7 +93,7 @@ class DependencyFinder
 
         Dir.glob(dependency_type) do |file|
             File.readlines(file).each do |line|
-                dependencies << file if line.include?(field)
+                dependencies << file if line.downcase.include?(field.downcase)
             end
         end
 
