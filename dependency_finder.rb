@@ -75,9 +75,9 @@ class DependencyFinder
         file.readlines.each do |line|
             inputs.each_with_index do |value, index|
                 if index == 0
-                    worksheet.write(row, index, line)
+                    worksheet.write(row, index, line.chomp)
                 else
-                    worksheet.write(row, index, dependency_search(line, @commands[value][:file_type]))
+                    worksheet.write(row, index, dependency_search(line.chomp, @commands[value][:file_type]))
                 end 
             end
 
@@ -93,7 +93,10 @@ class DependencyFinder
 
         Dir.glob(dependency_type) do |file|
             File.readlines(file).each do |line|
-                dependencies << file if line.include?(field.chomp)
+                if line.downcase.include?(field.downcase)
+                    file.slice!('/Users/daniel.m/Projects/Polaris/force-app/main/default')
+                    dependencies << file
+                end
             end
         end
 
