@@ -50,12 +50,12 @@ class DependencyFinder
         inputs = gets.chomp 
         formatted_inputs = inputs.split(',').map { |s| s.to_i }
 
-        write_to_excel("opportunity_field_names.txt", formatted_inputs.unshift(0))
+        write_to_excel("../Object_Fields/opportunity_field_names.txt", formatted_inputs.unshift(0))
     end
 
     def write_to_excel(file, inputs)
         f = File.new(file, chomp: true)
-        workbook = WriteXLSX.new('Opportunity_Field_Dependencies.xlsx')
+        workbook = WriteXLSX.new('../Field_Dependency_Excel_Sheets/Opportunity_Field_Dependencies.xlsx')
         worksheet = workbook.add_worksheet
         
         write_lines(f, workbook, worksheet, inputs)
