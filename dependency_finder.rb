@@ -93,7 +93,10 @@ class DependencyFinder
 
         Dir.glob(dependency_type) do |file|
             File.readlines(file).each do |line|
-                dependencies << file if line.downcase.include?(field.downcase)
+                if line.downcase.include?(field.downcase)
+                    file.slice!('/Users/daniel.m/Projects/Polaris/force-app/main/default')
+                    dependencies << file
+                end
             end
         end
 
