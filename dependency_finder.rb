@@ -77,7 +77,7 @@ class DependencyFinder
                 if index == 0
                     worksheet.write(row, index, line.chomp)
                 else
-                    worksheet.write(row, index, dependency_search(line, @commands[value][:file_type]))
+                    worksheet.write(row, index, dependency_search(line.chomp, @commands[value][:file_type]))
                 end 
             end
 
@@ -93,7 +93,7 @@ class DependencyFinder
 
         Dir.glob(dependency_type) do |file|
             File.readlines(file).each do |line|
-                dependencies << file if line.include?(field.chomp)
+                dependencies << file if line.include?(field)
             end
         end
 
